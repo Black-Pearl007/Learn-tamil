@@ -2,8 +2,6 @@
 
 An interactive web app for beginners to learn Tamil letters, numbers, everyday words and phrases. It combines flashcards, spaced-repetition review, quizzes, a matching game and a handwriting pad. It runs entirely in the browser, so there is nothing to install and no account to create.
 
-![Screenshot of the app](docs/screenshot.png)
-
 ## Why I built this
 
 Many children and adults who grow up outside Tamil Nadu, or in English-medium schools, can speak some Tamil but struggle to read it. I wanted a simple, free tool that teaches the script and basic vocabulary in short sessions on a phone, without sign-ups or ads.
