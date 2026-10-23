@@ -96,6 +96,9 @@ The format is `[Tamil, romanisation, English meaning]`. To add a new topic, add 
 - Recorded audio by native speakers instead of device voices
 - Installable offline version (PWA)
 
+  <img width="1906" height="866" alt="Screenshot 2026-10-23 160950" src="https://github.com/user-attachments/assets/07006818-3a37-4fd4-8a88-8f0b471751b2" />
+
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
