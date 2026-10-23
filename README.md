@@ -4,8 +4,6 @@ An interactive web app for beginners to learn Tamil letters, numbers, everyday w
 
 ![Screenshot of the app](docs/screenshot.png)
 
-**Live demo:** https://YOUR-USERNAME.github.io/tamil-learning-app/
-
 ## Why I built this
 
 Many children and adults who grow up outside Tamil Nadu, or in English-medium schools, can speak some Tamil but struggle to read it. I wanted a simple, free tool that teaches the script and basic vocabulary in short sessions on a phone, without sign-ups or ads.
