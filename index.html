@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f2523">
+<title>Learn Tamil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;700&family=Mukta:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f2f6f1;--dot:#b9cfc4;--ink:#12312f;--muted:#547069;--card:#ffffff;--bd:#c5d6cc;--gold:#f2a900;--gold-t:#2a1d00;--ok:#1f8a4c;--bad:#c93a3a;--pink:#d6336c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f2523;--dot:#244340;--ink:#f1ede2;--muted:#9db8b0;--card:#16322f;--bd:#2c4c48;--gold:#ffb81c;--gold-t:#2a1d00;--ok:#4cc784;--bad:#ff7a7a;--pink:#ff7aa8}}
+:root[data-theme="dark"]{--bg:#0f2523;--dot:#244340;--ink:#f1ede2;--muted:#9db8b0;--card:#16322f;--bd:#2c4c48;--gold:#ffb81c;--gold-t:#2a1d00;--ok:#4cc784;--bad:#ff7a7a;--pink:#ff7aa8}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%;margin:0}
+body{background-color:var(--bg);background-image:radial-gradient(circle,var(--dot) 2.5px,transparent 3px);background-size:28px 28px;color:var(--ink);font:17px/1.5 "Mukta","Noto Sans Tamil",system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:600px;margin:0 auto;padding:18px 16px 40px}
+header{text-align:center;margin-bottom:10px}
+h1{font-family:"Noto Sans Tamil","Mukta",sans-serif;font-size:2.1rem;margin:0;line-height:1.3}
+header p{margin:0 0 8px;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+button{font:inherit;cursor:pointer;color:inherit}
+button:disabled{cursor:default}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+
+/* stats bar */
+.stats{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
+.chip{background:var(--card);border:2px solid var(--bd);border-radius:999px;padding:1px 12px;font-weight:600;font-size:.9rem;white-space:nowrap}
+.goal{position:relative;flex:1 1 150px;min-width:150px;max-width:260px;height:30px;border:2px solid var(--bd);border-radius:999px;background:var(--card);overflow:hidden}
+.goal i{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--gold);opacity:.6;transition:width .4s}
+.goal b{position:relative;display:block;text-align:center;font-size:.82rem;line-height:26px}
+.icon{width:36px;height:36px;border-radius:50%;background:var(--card);border:2px solid var(--bd);padding:0;font-size:1rem;line-height:1}
+.icon:hover{border-color:var(--ink)}
+
+/* tabs */
+.tab,.mode{background:var(--card);border:2px solid var(--bd);border-radius:999px;padding:6px 16px;font-weight:600}
+.mode{padding:5px 13px;font-size:.95rem}
+.tab[aria-pressed="true"],.mode[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.badge{display:inline-block;min-width:1.4em;margin-left:5px;padding:0 5px;border-radius:999px;background:var(--pink);color:#fff;font-size:.75rem;line-height:1.5}
+
+.panel{background:var(--card);border:2px solid var(--ink);border-radius:20px;padding:18px}
+.prog{height:8px;background:var(--bd);border-radius:6px;overflow:hidden;margin-bottom:6px}
+.prog i{display:block;height:100%;width:0;background:var(--ok);transition:width .25s}
+.meta{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:.9rem;margin-bottom:10px}
+
+/* flip card */
+.flip{display:block;width:100%;padding:0;border:0;background:none;perspective:900px}
+.flip-in{position:relative;min-height:250px;transition:transform .45s;transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;top:0;right:0;bottom:0;left:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--bg);border:2px dashed var(--bd);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px;text-align:center}
+.face.back{transform:rotateY(180deg)}
+.big{font-family:"Noto Sans Tamil",sans-serif;font-weight:700;line-height:1.3}
+.big.s1{font-size:4.6rem}.big.s2{font-size:2.6rem}.big.s3{font-size:1.7rem}
+.tsm{font-family:"Noto Sans Tamil",sans-serif;font-size:1.8rem;font-weight:700;color:var(--muted)}
+.rom{font-size:1.9rem;font-weight:700;color:var(--pink);line-height:1.3}
+.en{color:var(--muted);font-size:1.1rem}
+.hint{color:var(--muted);font-size:.9rem}
+
+.ctl{display:flex;gap:8px;margin-top:12px}
+.ctl button{flex:1;background:var(--card);border:2px solid var(--bd);border-radius:12px;padding:10px 6px;font-weight:600}
+.ctl button:hover:not(:disabled){border-color:var(--ink)}
+.ctl .known{background:var(--gold);color:var(--gold-t);border-color:var(--gold)}
+.ctl .known[aria-pressed="true"]{background:var(--ok);color:#fff;border-color:var(--ok)}
+.ctl button[aria-pressed="true"]:not(.known){background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ctl .again{border-color:var(--bad);color:var(--bad)}
+.ctl .good{background:var(--gold);color:var(--gold-t);border-color:var(--gold)}
+.ctl .easy{background:var(--ok);color:#fff;border-color:var(--ok)}
+.seg{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.seg .tab{padding:3px 12px;font-size:.88rem}
+
+/* quiz */
+.q{font-family:"Noto Sans Tamil",sans-serif;text-align:center;font-weight:700;margin:4px 0 2px;line-height:1.3}
+.q.s1{font-size:3.6rem}.q.s2{font-size:2.4rem}.q.s3{font-size:1.6rem}
+.q.lat{font-family:"Mukta",sans-serif;font-size:3rem;color:var(--pink)}
+.qsub{text-align:center;color:var(--muted);margin-bottom:12px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{background:var(--card);border:2px solid var(--bd);border-radius:12px;padding:12px 8px;font-weight:600;min-height:52px}
+.opt.ta{font-family:"Noto Sans Tamil",sans-serif;line-height:1.3}
+.opt.ta.s1{font-size:2rem}.opt.ta.s2{font-size:1.4rem}.opt.ta.s3{font-size:1.05rem}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{background:var(--bad);border-color:var(--bad);color:#fff}
+.next{display:block;width:100%;margin-top:14px;background:var(--gold);color:var(--gold-t);border:0;border-radius:12px;padding:12px;font-weight:700}
+.next.alt{background:var(--card);color:var(--ink);border:2px solid var(--bd)}
+.next.play{margin:6px auto 12px;width:auto;padding:12px 26px;font-size:1.1rem}
+.result{text-align:center;padding:10px 0}
+.result .score{font-size:3rem;font-weight:700}
+.miss{display:flex;align-items:center;gap:10px;border-top:1px solid var(--bd);padding:6px 0;text-align:left}
+.miss .t{font-family:"Noto Sans Tamil",sans-serif;font-size:1.5rem;font-weight:700;min-width:3.2em}
+.miss .m{flex:1;color:var(--muted);font-size:.95rem}
+.miss button{background:var(--card);border:2px solid var(--bd);border-radius:10px;padding:2px 10px;font-size:.9rem}
+
+/* match */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mcol{display:flex;flex-direction:column;gap:10px}
+.tile{min-height:58px;border:2px solid var(--bd);background:var(--card);border-radius:12px;padding:6px 8px;font-weight:600;line-height:1.25}
+.tile.ta{font-family:"Noto Sans Tamil",sans-serif}
+.tile.ta.s1{font-size:1.9rem}.tile.ta.s2{font-size:1.3rem}.tile.ta.s3{font-size:.95rem}
+.tile:hover:not(:disabled){border-color:var(--ink)}
+.tile.sel{border-color:var(--pink);background:var(--bg);box-shadow:0 0 0 3px var(--pink)}
+.tile.done{background:var(--ok);border-color:var(--ok);color:#fff;opacity:.75}
+.tile.no{border-color:var(--bad);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* write */
+.pad{position:relative;height:280px;border:2px dashed var(--bd);border-radius:16px;background:var(--bg);overflow:hidden}
+.pad canvas{position:absolute;top:0;left:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.padtxt{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-family:"Noto Sans Tamil",sans-serif;font-weight:700;line-height:1.3;pointer-events:none;user-select:none;-webkit-user-select:none;color:var(--ink);opacity:.14;transition:opacity .2s}
+.padtxt.s1{font-size:10rem}.padtxt.s2{font-size:5rem}.padtxt.s3{font-size:2.2rem}
+.padtxt.rev{color:var(--pink);opacity:0}
+.pad.rv .rev{opacity:.55}
+.pad.nog .guide{opacity:0}
+
+/* chart */
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px}
+.cb{width:44px;height:44px;font-family:"Noto Sans Tamil",sans-serif;font-size:1.3rem;font-weight:700;border:2px solid var(--bd);background:var(--card);border-radius:10px;padding:0}
+.cb[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.vgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.vc{border:2px solid var(--bd);border-radius:12px;padding:6px 2px;background:var(--card);text-align:center}
+.vc:hover{border-color:var(--ink)}
+.vc[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink)}
+.vc .t{display:block;font-family:"Noto Sans Tamil",sans-serif;font-size:2rem;font-weight:700;line-height:1.35}
+.vc .r{color:var(--pink);font-weight:700;font-size:.9rem}
+.formula{text-align:center;font-family:"Noto Sans Tamil",sans-serif;font-size:1.5rem;margin:6px 0 12px;min-height:2.4rem;color:var(--muted)}
+.formula b{color:var(--ink)}
+
+/* progress */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.sc{border:2px solid var(--bd);border-radius:12px;padding:8px 4px;text-align:center;color:var(--muted);font-size:.85rem}
+.sc b{display:block;font-size:1.6rem;color:var(--ink);line-height:1.2}
+.dk{display:grid;grid-template-columns:116px 1fr 56px;gap:8px;align-items:center;margin:6px 0;font-size:.95rem}
+.sbar{height:10px;border-radius:6px;background:var(--bd);overflow:hidden;display:flex}
+.sbar i{display:block;height:100%}
+.sbar .m{background:var(--ok)}.sbar .s{background:var(--gold)}
+.legend{color:var(--muted);font-size:.82rem;margin:2px 0 10px}
+h2{font-size:1.05rem;margin:16px 0 4px}
+.set{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.set button,.set select{background:var(--card);border:2px solid var(--bd);border-radius:10px;padding:6px 12px;font-weight:600}
+
+.note{text-align:center;color:var(--muted);font-size:.85rem;margin-top:14px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;z-index:10;max-width:90vw;text-align:center}
+.confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9}
+@media (max-width:420px){.big.s1{font-size:3.8rem}.opts{grid-template-columns:1fr}.padtxt.s1{font-size:8rem}.dk{grid-template-columns:90px 1fr 48px}.mode{padding:5px 10px;font-size:.88rem}}
+@media (prefers-reduced-motion:reduce){.prog i,.flip-in,.goal i,.padtxt{transition:none}.tile.no{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>தமிழ் கற்போம்</h1>
+    <p>Learn Tamil: letters, numbers, words and phrases</p>
+    <div class="stats">
+      <span class="chip" id="stStreak" title="Days in a row"></span>
+      <span class="chip" id="stLvl" title="Level goes up every 100 XP"></span>
+      <span class="goal" title="Daily goal"><i id="gBar"></i><b id="gTxt"></b></span>
+      <button class="icon" id="snd" type="button" aria-label="Toggle sound effects"></button>
+      <button class="icon" id="thm" type="button" aria-label="Toggle light and dark theme">🌓</button>
+    </div>
+  </header>
+  <div class="row" id="decks" role="group" aria-label="Choose a topic"></div>
+  <div class="row" id="modes" role="group" aria-label="Choose a mode"></div>
+  <div class="panel" id="main" aria-live="polite"></div>
+  <p class="note">Audio uses your device’s Tamil voice. If you hear nothing, install a Tamil voice in your phone or computer settings.</p>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<noscript><p class="note">This app needs JavaScript to run.</p></noscript>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- helpers ---------- */
+const $=id=>document.getElementById(id);
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e;}
+function btn(label,fn,cls){const b=el('button',cls||'',label);b.type='button';b.addEventListener('click',fn);return b;}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function sz(t){const n=[...t].length;return n<=3?1:n<=8?2:3;}   // 1 = single letter, 3 = phrase
+function pickOne(a){return a[Math.floor(Math.random()*a.length)];}
+
+/* ---------- content ---------- */
+const mk=(name,field,label,rlabel,items)=>({name,field,label,rlabel,items});
+const L=en=>x=>({ta:x[0],rom:x[1],en});
+const W=x=>({ta:x[0],rom:x[1],en:x[2]});
+const LQ='What sound is this letter?',LR='Which letter makes this sound?';
+const WQ='What does this word mean?',WR='Which Tamil word means this?';
+
+const DECKS={
+ vowels:mk('Vowels','rom',LQ,LR,[["அ","a"],["ஆ","aa"],["இ","i"],["ஈ","ee"],["உ","u"],["ஊ","oo"],["எ","e"],["ஏ","ae"],["ஐ","ai"],["ஒ","o"],["ஓ","oh"],["ஔ","au"]].map(L('Vowel (uyir)'))),
+ consonants:mk('Consonants','rom',LQ,LR,[["க","ka"],["ங","nga"],["ச","cha"],["ஞ","nya"],["ட","ta"],["ண","Na"],["த","tha"],["ந","na"],["ப","pa"],["ம","ma"],["ய","ya"],["ர","ra"],["ல","la"],["வ","va"],["ழ","zha"],["ள","La"],["ற","Ra"],["ன","nha"]].map(L('Consonant (mei)'))),
+ combined:mk('Combined','rom',LQ,LR,[]),
+ numbers:mk('Numbers','en','What number is this?','Which Tamil word is this number?',[["ஒன்று","onru","1"],["இரண்டு","irandu","2"],["மூன்று","moonru","3"],["நான்கு","naangu","4"],["ஐந்து","ainthu","5"],["ஆறு","aaru","6"],["ஏழு","ezhu","7"],["எட்டு","ettu","8"],["ஒன்பது","onbathu","9"],["பத்து","paththu","10"]].map(W)),
+ words:mk('Everyday words','en',WQ,WR,[["வணக்கம்","vanakkam","hello"],["நன்றி","nandri","thank you"],["ஆம்","aam","yes"],["இல்லை","illai","no"],["தண்ணீர்","thanneer","water"],["அம்மா","amma","mother"],["அப்பா","appa","father"],["நண்பன்","nanban","friend"],["பள்ளி","palli","school"],["புத்தகம்","puthagam","book"],["வீடு","veedu","house"],["சாப்பாடு","saappaadu","food"],["பால்","paal","milk"],["மழை","mazhai","rain"],["கடல்","kadal","sea"],["நிலா","nila","moon"],["சூரியன்","sooriyan","sun"],["மீன்","meen","fish"],["நாய்","naai","dog"],["பூனை","poonai","cat"]].map(W)),
+ colours:mk('Colours','en',WQ,WR,[["சிவப்பு","sivappu","red"],["நீலம்","neelam","blue"],["பச்சை","pachchai","green"],["மஞ்சள்","manjal","yellow"],["கருப்பு","karuppu","black"],["வெள்ளை","vellai","white"],["ஊதா","oothaa","purple"]].map(W)),
+ family:mk('Family','en',WQ,WR,[["அக்கா","akka","elder sister"],["அண்ணன்","annan","elder brother"],["தங்கை","thangai","younger sister"],["தம்பி","thambi","younger brother"],["தாத்தா","thaaththaa","grandfather"],["பாட்டி","paatti","grandmother"],["மாமா","maama","maternal uncle"],["அத்தை","aththai","paternal aunt"],["குழந்தை","kuzhanthai","child"]].map(W)),
+ days:mk('Days','en','Which day is this?','Which Tamil word is this day?',[["ஞாயிறு","nyaayiru","Sunday"],["திங்கள்","thingal","Monday"],["செவ்வாய்","sevvaai","Tuesday"],["புதன்","puthan","Wednesday"],["வியாழன்","viyaazhan","Thursday"],["வெள்ளி","velli","Friday"],["சனி","sani","Saturday"]].map(W)),
+ food:mk('Food','en',WQ,WR,[["சாதம்","saatham","rice"],["இட்லி","idli","idli"],["தோசை","dosai","dosa"],["தேநீர்","thaeneer","tea"],["பழம்","pazham","fruit"],["காய்கறி","kaaikari","vegetables"],["உப்பு","uppu","salt"],["சர்க்கரை","sarkkarai","sugar"],["முட்டை","muttai","egg"],["ரொட்டி","rotti","bread"]].map(W)),
+ phrases:mk('Phrases','en','What does this phrase mean?','Which Tamil phrase means this?',[["காலை வணக்கம்","kaalai vanakkam","good morning"],["இரவு வணக்கம்","iravu vanakkam","good night"],["உங்கள் பெயர் என்ன?","ungal peyar enna?","what is your name?"],["எப்படி இருக்கிறீர்கள்?","eppadi irukkireergal?","how are you?"],["எனக்குப் புரியவில்லை","enakkup puriyavillai","I don't understand"],["மன்னிக்கவும்","mannikkavum","excuse me / sorry"],["எவ்வளவு?","evvalavu?","how much?"],["எனக்குத் தண்ணீர் வேண்டும்","enakkuth thanneer vendum","I need water"],["மீண்டும் சந்திப்போம்","meendum santhippom","see you again"]].map(W))
+};
+
+/* Combined letters (uyirmei): consonant + vowel sign, built with Unicode rather than typed by hand */
+const VS=["","ா","ி","ீ","ு","ூ","ெ","ே","ை","ொ","ோ","ௌ"];
+const VR=["a","aa","i","ee","u","oo","e","ae","ai","o","oh","au"];
+DECKS.consonants.items.forEach(c=>{
+  const stem=c.rom.slice(0,-1);
+  VS.forEach((s,k)=>DECKS.combined.items.push({ta:c.ta+s,rom:stem+VR[k],en:'Combined letter (uyirmei)',g:c.ta}));
+});
+
+const MODES=[['learn','Learn'],['review','Review'],['quiz','Quiz'],['match','Match'],['write','Write'],['chart','Chart'],['progress','Progress']];
+const QTYPES=[['see','Tamil → answer'],['rev','Answer → Tamil'],['listen','Listen']];
+const INT=[0,1,3,7,14,30];   // review interval in days for each box 0..5
+
+/* ---------- saved data ---------- */
+const def=()=>({prog:{},xp:0,day:'',dayXp:0,last:'',streak:0,best:{},bestMatch:{},sound:true,theme:'',goal:30,deck:'vowels',mode:'learn'});
+function loadStore(){try{return Object.assign(def(),JSON.parse(localStorage.getItem('tamil_v2')||'{}'));}catch(e){return def();}}
+function persist(){try{localStorage.setItem('tamil_v2',JSON.stringify(store));}catch(e){}}
+let store=loadStore();
+if(!DECKS[store.deck])store.deck='vowels';
+if(!MODES.some(m=>m[0]===store.mode))store.mode='learn';
+
+function getRec(d,ta){return (store.prog[d]&&store.prog[d][ta])||null;}
+function setBox(d,ta,b){
+  const p=store.prog[d]||(store.prog[d]={});
+  const r=p[ta]||(p[ta]={b:0,due:0,n:0});
+  r.b=Math.max(0,Math.min(5,b));r.due=Date.now()+INT[r.b]*864e5;r.n++;persist();
+}
+const mastered=(d,ta)=>{const r=getRec(d,ta);return !!r&&r.b>=3;};
+
+/* ---------- XP, streak, sound, confetti ---------- */
+const dayStr=t=>new Date(t).toLocaleDateString('en-CA');
+function streakNow(){const t=dayStr(Date.now()),y=dayStr(Date.now()-864e5);return(store.last===t||store.last===y)?store.streak:0;}
+function addXP(n){
+  const t=dayStr(Date.now());
+  if(store.day!==t){store.day=t;store.dayXp=0;}
+  if(store.last!==t){store.streak=store.last===dayStr(Date.now()-864e5)?store.streak+1:1;store.last=t;}
+  const before=store.dayXp;
+  store.xp+=n;store.dayXp+=n;persist();renderStats();
+  if(before<store.goal&&store.dayXp>=store.goal){toast('Daily goal reached! 🎉');confetti();sfx.win();}
+}
+let toastT=0;
+function toast(msg){const t=$('toast');t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true;},2400);}
+
+let ac=null;
+function beep(f,d,type,delay){
+  if(!store.sound)return;
+  try{
+    ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    const o=ac.createOscillator(),g=ac.createGain(),t=ac.currentTime+(delay||0);
+    o.type=type||'sine';o.frequency.value=f;o.connect(g);g.connect(ac.destination);
+    g.gain.setValueAtTime(.08,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+    o.start(t);o.stop(t+d);
+  }catch(e){}
+}
+const sfx={ok(){beep(660,.12);beep(880,.18,'sine',.1);},bad(){beep(180,.25,'triangle');},win(){[523,659,784,1046].forEach((f,i)=>beep(f,.22,'sine',i*.12));}};
+
+function confetti(){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const c=el('canvas','confetti');c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);
+  const g=c.getContext('2d'),cols=['#f2a900','#d6336c','#1f8a4c','#3b82f6','#f1ede2'];
+  const ps=Array.from({length:90},()=>({x:innerWidth/2,y:innerHeight*.4,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,s:5+Math.random()*6,c:pickOne(cols),r:Math.random()*6}));
+  let f=0;
+  (function tick(){
+    g.clearRect(0,0,c.width,c.height);
+    ps.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=.2;g.fillStyle=p.c;g.save();g.translate(p.x,p.y);g.rotate(p.r);g.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);g.restore();});
+    if(++f<110)requestAnimationFrame(tick);else c.remove();
+  })();
+}
+
+/* ---------- speech ---------- */
+let voices=[];
+function loadVoices(){try{voices=speechSynthesis.getVoices()||[];}catch(e){}}
+const taVoice=()=>voices.find(v=>v.lang&&v.lang.toLowerCase().indexOf('ta')===0);
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+function speak(text){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);u.lang='ta-IN';u.rate=0.8;
+  const v=taVoice();if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+
+/* ---------- state ---------- */
+const main=$('main');
+const S={deck:store.deck,mode:store.mode,order:[],i:0,quiz:null,qtype:'see',match:null,review:null,chart:{c:0,v:null},timer:0,keys:{}};
+function resetOrder(){S.order=DECKS[S.deck].items.map((_,n)=>n);S.i=0;}
+
+function setDeck(k){S.deck=k;S.quiz=S.match=S.review=null;resetOrder();render();}
+function setMode(m){S.mode=m;S.quiz=S.match=S.review=null;render();}
+
+function dueItems(deck){const now=Date.now();return DECKS[deck].items.filter(it=>{const r=getRec(deck,it.ta);return r&&r.n>0&&r.due<=now;});}
+
+function buildDecks(){
+  const box=$('decks');box.innerHTML='';
+  Object.keys(DECKS).forEach(k=>{
+    const b=btn(DECKS[k].name,()=>setDeck(k),'tab');b.setAttribute('aria-pressed',String(k===S.deck));box.appendChild(b);
+  });
+}
+function buildModes(){
+  const box=$('modes');box.innerHTML='';
+  const due=dueItems(S.deck).length;
+  MODES.forEach(m=>{
+    const b=btn(m[1],()=>setMode(m[0]),'mode');b.setAttribute('aria-pressed',String(m[0]===S.mode));
+    if(m[0]==='review'&&due>0)b.appendChild(el('span','badge',String(due)));
+    box.appendChild(b);
+  });
+}
+function renderStats(){
+  $('stStreak').textContent='🔥 '+streakNow()+(streakNow()===1?' day':' days');
+  $('stLvl').textContent='Level '+(Math.floor(store.xp/100)+1)+' · '+store.xp+' XP';
+  const today=store.day===dayStr(Date.now())?store.dayXp:0;
+  $('gBar').style.width=Math.min(100,today/store.goal*100)+'%';
+  $('gTxt').textContent='Today '+today+' / '+store.goal+' XP';
+  $('snd').textContent=store.sound?'🔊':'🔇';
+  $('snd').setAttribute('aria-pressed',String(store.sound));
+}
+function applyTheme(){if(store.theme)document.documentElement.setAttribute('data-theme',store.theme);else document.documentElement.removeAttribute('data-theme');}
+$('snd').addEventListener('click',()=>{store.sound=!store.sound;persist();renderStats();toast(store.sound?'Sound effects on':'Sound effects off');});
+$('thm').addEventListener('click',()=>{
+  const dark=store.theme?store.theme==='dark':(window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches);
+  store.theme=dark?'light':'dark';persist();applyTheme();
+});
+
+function render(){
+  clearInterval(S.timer);S.keys={};
+  store.deck=S.deck;store.mode=S.mode;persist();
+  main.innerHTML='';
+  $('decks').hidden=(S.mode==='chart'||S.mode==='progress');
+  buildDecks();buildModes();
+  ({learn:renderLearn,review:renderReview,quiz:renderQuiz,match:renderMatch,write:renderWrite,chart:renderChart,progress:renderProgress})[S.mode]();
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  if(e.target.closest&&e.target.closest('input,textarea,select'))return;
+  if(e.key===' '&&e.target!==document.body)return;   // let focused buttons handle Space themselves
+  const f=S.keys[e.key];
+  if(f){e.preventDefault();f();}
+});
+
+/* ---------- shared pieces ---------- */
+function topBar(frac,left,right){
+  const pr=el('div','prog'),b=el('i');b.style.width=Math.round(frac*100)+'%';pr.appendChild(b);main.appendChild(pr);
+  const m=el('div','meta');m.appendChild(el('span','',left));m.appendChild(el('span','',right));main.appendChild(m);
+}
+function makeCard(item,onFlip){
+  const card=el('button','flip');card.type='button';card.setAttribute('aria-label','Flip card');
+  const inn=el('div','flip-in'),f=el('div','face'),b=el('div','face back');
+  f.appendChild(el('div','big s'+sz(item.ta),item.ta));f.appendChild(el('div','hint','Tap the card to see the answer'));
+  b.appendChild(el('div','tsm',item.ta));b.appendChild(el('div','rom',item.rom));b.appendChild(el('div','en',item.en));
+  b.setAttribute('aria-hidden','true');
+  inn.appendChild(f);inn.appendChild(b);card.appendChild(inn);
+  const api={node:card,on:false,flip(){
+    api.on=!api.on;card.classList.toggle('on',api.on);
+    f.setAttribute('aria-hidden',String(api.on));b.setAttribute('aria-hidden',String(!api.on));
+    if(onFlip)onFlip(api.on);
+  }};
+  card.addEventListener('click',api.flip);
+  return api;
+}
+function swipe(node,prev,next){
+  let x=null;
+  node.addEventListener('touchstart',e=>{x=e.touches[0].clientX;},{passive:true});
+  node.addEventListener('touchend',e=>{
+    if(x===null)return;const dx=e.changedTouches[0].clientX-x;x=null;
+    if(Math.abs(dx)>60){dx<0?next():prev();}
+  });
+}
+function shortcuts(text){main.appendChild(el('p','note',text));}
+
+/* ---------- Learn (flashcards) ---------- */
+function renderLearn(){
+  const d=DECKS[S.deck],n=S.order.length,item=d.items[S.order[S.i]];
+  const done=d.items.filter(x=>mastered(S.deck,x.ta)).length;
+  topBar(done/d.items.length,'Card '+(S.i+1)+' of '+n,done+' of '+d.items.length+' learned');
+  const c=makeCard(item);main.appendChild(c.node);
+  const go=k=>{S.i=(S.i+k+n)%n;render();};
+  swipe(c.node,()=>go(-1),()=>go(1));
+  const m=mastered(S.deck,item.ta);
+  const ctl=el('div','ctl');
+  const kn=btn(m?'Learned ✓':'I know this',()=>{
+    if(m){setBox(S.deck,item.ta,0);render();}
+    else{setBox(S.deck,item.ta,3);addXP(3);sfx.ok();go(1);}
+  },'known');
+  kn.setAttribute('aria-pressed',String(m));
+  [btn('Back',()=>go(-1)),btn('Listen',()=>speak(item.ta)),kn,btn('Next',()=>go(1))].forEach(b=>ctl.appendChild(b));
+  main.appendChild(ctl);
+  const sh=btn('Shuffle cards',()=>{S.order=shuffle(S.order);S.i=0;render();},'tab');sh.style.marginTop='12px';
+  const w=el('div','row');w.appendChild(sh);main.appendChild(w);
+  S.keys={ArrowRight:()=>go(1),ArrowLeft:()=>go(-1),' ':c.flip,l:()=>speak(item.ta),k:()=>kn.click()};
+  shortcuts('Keys: ← → move · Space flip · L listen · K I know this');
+}
+
+/* ---------- Review (spaced repetition, Leitner boxes) ---------- */
+function renderReview(){
+  const d=DECKS[S.deck];
+  if(!S.review){
+    const fresh=d.items.filter(it=>{const r=getRec(S.deck,it.ta);return !r||r.n===0;});
+    S.review={q:shuffle(dueItems(S.deck)).slice(0,12).concat(shuffle(fresh).slice(0,5)),i:0,reviewed:0,again:0,good:0,easy:0};
+  }
+  const R=S.review;
+  if(R.i>=R.q.length){
+    const r=el('div','result');
+    if(!R.reviewed){
+      r.appendChild(el('div','score','All caught up'));
+      let next=Infinity;const now=Date.now();
+      d.items.forEach(it=>{const x=getRec(S.deck,it.ta);if(x&&x.n>0&&x.due>now)next=Math.min(next,x.due);});
+      r.appendChild(el('p','',next<Infinity?'Nothing is due in this topic. Next card is due in '+agoText(next-now)+'.':'No cards to review in this topic.'));
+      r.appendChild(el('p','hint','Cards you mark in Learn or answer in Quiz show up here when they are due.'));
+    }else{
+      r.appendChild(el('div','score',R.reviewed+' cards'));
+      r.appendChild(el('p','','Again: '+R.again+' · Good: '+R.good+' · Easy: '+R.easy));
+      r.appendChild(el('p','hint','Cards you rated Again come back sooner. The others wait longer each time.'));
+    }
+    main.appendChild(r);
+    main.appendChild(btn('Go to Learn',()=>setMode('learn'),'next'));
+    return;
+  }
+  const item=R.q[R.i],rec=getRec(S.deck,item.ta),b=rec?rec.b:0;
+  topBar(R.i/R.q.length,'Card '+(R.i+1)+' of '+R.q.length,rec&&rec.n?'Box '+b+' of 5':'New card');
+  const rate=el('div','ctl'),show=btn('Show answer',()=>c.flip(),'next');
+  rate.hidden=true;
+  const c=makeCard(item,on=>{rate.hidden=!on;show.hidden=on;});
+  main.appendChild(c.node);
+  const done=k=>{
+    if(k===0){setBox(S.deck,item.ta,0);R.again++;R.q.push(item);sfx.bad();}
+    else{setBox(S.deck,item.ta,b+(k===2?2:1));addXP(k===2?8:5);sfx.ok();if(k===2)R.easy++;else R.good++;}
+    R.reviewed++;R.i++;render();
+  };
+  rate.appendChild(btn('Again',()=>done(0),'again'));
+  rate.appendChild(btn('Good · '+INT[Math.min(5,b+1)]+'d',()=>done(1),'good'));
+  rate.appendChild(btn('Easy · '+INT[Math.min(5,b+2)]+'d',()=>done(2),'easy'));
+  main.appendChild(show);main.appendChild(rate);
+  main.appendChild(btn('Listen',()=>speak(item.ta),'next alt'));
+  S.keys={' ':()=>{if(!c.on)c.flip();},l:()=>speak(item.ta),'1':()=>{if(c.on)done(0);},'2':()=>{if(c.on)done(1);},'3':()=>{if(c.on)done(2);}};
+  shortcuts('Keys: Space show answer · 1 Again · 2 Good · 3 Easy · L listen');
+}
+function agoText(ms){
+  const m=ms/6e4;if(m<60)return Math.max(1,Math.round(m))+' min';
+  const h=m/60;if(h<48)return Math.round(h)+' hours';return Math.round(h/24)+' days';
+}
+
+/* ---------- Quiz ---------- */
+function segControl(items,cur,onPick){
+  const s=el('div','seg');s.setAttribute('role','group');
+  items.forEach(it=>{const b=btn(it[1],()=>onPick(it[0]),'tab');b.setAttribute('aria-pressed',String(it[0]===cur));s.appendChild(b);});
+  main.appendChild(s);
+}
+function startQuiz(subset){
+  const d=DECKS[S.deck],type=S.qtype,toTa=type!=='see',key=toTa?'ta':d.field;
+  const src=subset||shuffle(d.items).slice(0,Math.min(10,d.items.length));
+  const qs=src.map(it=>{
+    const ans=it[key],near=[],far=[];
+    d.items.forEach(o=>{const v=o[key];if(v===ans)return;((it.g&&o.g===it.g)?near:far).push(v);});
+    const pool=[...new Set(shuffle(near).concat(shuffle(far)))].slice(0,3);
+    return{it,ans,opts:shuffle([ans].concat(pool))};
+  });
+  S.quiz={qs,n:0,score:0,combo:0,xp:0,picked:null,missed:[],spoken:{},practice:!!subset,final:null};
+}
+function renderQuiz(){
+  segControl(QTYPES,S.qtype,t=>{S.qtype=t;S.quiz=null;render();});
+  if(!S.quiz)startQuiz();
+  const z=S.quiz,d=DECKS[S.deck],type=S.qtype,toTa=type!=='see';
+  if(z.n>=z.qs.length)return quizResult(z);
+  const q=z.qs[z.n],it=q.it;
+  topBar(z.n/z.qs.length,'Question '+(z.n+1)+' of '+z.qs.length,'Score '+z.score+(z.combo>1?' · 🔥 x'+z.combo:''));
+  if(type==='see'){
+    main.appendChild(el('div','q s'+sz(it.ta),it.ta));main.appendChild(el('div','qsub',d.label));
+  }else if(type==='rev'){
+    main.appendChild(el('div','q lat',d.field==='en'?it.en:it.rom));main.appendChild(el('div','qsub',d.rlabel));
+  }else{
+    main.appendChild(btn('🔊 Play sound',()=>speak(it.ta),'next play'));
+    main.appendChild(el('div','qsub','Which one did you hear?'));
+    if(!taVoice())main.appendChild(el('p','hint','No Tamil voice found on this device, so audio may be silent. Try another quiz type.'));
+    if(!z.spoken[z.n]){z.spoken[z.n]=1;setTimeout(()=>{if(S.quiz===z&&S.mode==='quiz')speak(it.ta);},250);}
+  }
+  const g=el('div','opts');
+  const choose=o=>{
+    if(z.picked!==null)return;
+    z.picked=o;const ok=o===q.ans,r=getRec(S.deck,it.ta);
+    if(ok){
+      z.score++;z.combo++;sfx.ok();const gain=10+(z.combo>=3?2:0);z.xp+=gain;addXP(gain);
+      if(!r||r.n===0||r.due<=Date.now())setBox(S.deck,it.ta,(r?r.b:0)+1);
+    }else{z.combo=0;sfx.bad();z.missed.push(it);setBox(S.deck,it.ta,0);}
+    render();
+  };
+  q.opts.forEach((o,k)=>{
+    const b=el('button','opt'+(toTa?' ta s'+sz(o):''),o);b.type='button';
+    if(z.picked!==null){b.disabled=true;if(o===q.ans)b.classList.add('right');else if(o===z.picked)b.classList.add('wrong');}
+    b.addEventListener('click',()=>choose(o));g.appendChild(b);
+    S.keys[String(k+1)]=()=>choose(o);
+  });
+  main.appendChild(g);
+  if(z.picked!==null){
+    const ok=z.picked===q.ans;
+    const fb=el('p','qsub',ok?pickOne(['Correct!','Great!','Nice one!']):'Not quite. The answer is '+q.ans+'.');fb.style.marginTop='10px';main.appendChild(fb);
+    main.appendChild(el('p','hint',it.ta+' · '+it.rom+(d.field==='en'?' · '+it.en:'')));
+    main.appendChild(btn('Listen',()=>speak(it.ta),'next alt'));
+    const nx=btn(z.n+1<z.qs.length?'Next question':'See my score',()=>{z.n++;z.picked=null;render();},'next');
+    main.appendChild(nx);
+    S.keys={Enter:()=>nx.click(),ArrowRight:()=>nx.click(),' ':()=>nx.click()};
+  }
+  shortcuts('Keys: 1–4 choose an answer · Enter next');
+}
+function quizResult(z){
+  const total=z.qs.length,key=S.deck+'|'+S.qtype;
+  if(!z.final){
+    let isBest=false;
+    if(!z.practice){const pv=store.best[key]||0;isBest=z.score>pv;if(isBest){store.best[key]=z.score;persist();}}
+    const perfect=z.score===total;
+    if(perfect){z.xp+=20;addXP(20);confetti();sfx.win();}
+    z.final={isBest,perfect};
+  }
+  const r=el('div','result');r.appendChild(el('div','score',z.score+' / '+total));
+  r.appendChild(el('p','',z.final.perfect?'Perfect score!':z.score>=total*0.7?'Well done. Keep practising.':'Good start. Try Learn, then take the quiz again.'));
+  r.appendChild(el('p','hint','+'+z.xp+' XP'+(z.practice?'':(z.final.isBest?' · New best score for this topic.':' · Best for this topic: '+store.best[key]+' / '+total))));
+  main.appendChild(r);
+  if(z.missed.length){
+    main.appendChild(el('h2','','Mistakes to review'));
+    z.missed.forEach(it=>{
+      const row=el('div','miss');row.appendChild(el('span','t',it.ta));
+      row.appendChild(el('span','m',it.rom+(DECKS[S.deck].field==='en'?' · '+it.en:'')));
+      row.appendChild(btn('Listen',()=>speak(it.ta)));main.appendChild(row);
+    });
+    main.appendChild(btn('Practise these mistakes',()=>{startQuiz(z.missed);render();},'next'));
+  }
+  main.appendChild(btn('Play again',()=>{S.quiz=null;render();},z.missed.length?'next alt':'next'));
+}
+
+/* ---------- Match game ---------- */
+function startMatch(){
+  const d=DECKS[S.deck],used=new Set(),items=[];
+  shuffle(d.items).forEach(it=>{const v=it[d.field];if(items.length<6&&!used.has(v)){used.add(v);items.push(it);}});
+  const idx=items.map((_,i)=>i);
+  S.match={items,left:shuffle(idx),right:shuffle(idx),done:new Set(),sel:null,no:null,moves:0,wrong:0,t0:0,fin:null};
+}
+function renderMatch(){
+  if(!S.match)startMatch();
+  const M=S.match,d=DECKS[S.deck];
+  if(M.fin){
+    const r=el('div','result');r.appendChild(el('div','score',M.fin.time+' s'));
+    r.appendChild(el('p','',M.wrong===0?'Flawless!':'Matched in '+M.moves+' moves with '+M.wrong+' mistake'+(M.wrong===1?'':'s')+'.'));
+    r.appendChild(el('p','hint','+'+M.fin.xp+' XP'+(M.fin.isBest?' · New best time for this topic.':' · Best time: '+store.bestMatch[S.deck]+' s')));
+    main.appendChild(r);main.appendChild(btn('Play again',()=>{S.match=null;render();},'next'));return;
+  }
+  topBar(M.done.size/M.items.length,'Tap a Tamil tile, then its match','');
+  const tm=main.querySelector('.meta span:last-child');tm.id='mt';
+  const upd=()=>{tm.textContent='⏱ '+(M.t0?Math.round((Date.now()-M.t0)/1000):0)+' s · '+M.moves+' moves';};
+  upd();if(M.t0)S.timer=setInterval(upd,500);
+  const tap=(side,p)=>{
+    if(M.done.has(p))return;
+    if(!M.t0)M.t0=Date.now();
+    if(side==='L'&&store.sound)speak(M.items[p].ta);
+    if(!M.sel||M.sel.side===side){M.sel={side,p};render();return;}
+    M.moves++;
+    if(M.sel.p===p){
+      M.done.add(p);M.sel=null;sfx.ok();addXP(2);
+      if(M.done.size===M.items.length){
+        const time=Math.round((Date.now()-M.t0)/1000),xp=Math.max(5,15-M.wrong*2),pv=store.bestMatch[S.deck];
+        const isBest=!pv||time<pv;if(isBest){store.bestMatch[S.deck]=time;persist();}
+        M.fin={time,xp,isBest};addXP(xp);sfx.win();if(M.wrong<=1)confetti();
+      }
+    }else{
+      M.wrong++;sfx.bad();M.no=[M.sel.side+M.sel.p,side+p];M.sel=null;
+      setTimeout(()=>{if(S.match===M){M.no=null;if(S.mode==='match')render();}},450);
+    }
+    render();
+  };
+  const tile=(side,p)=>{
+    const it=M.items[p],ta=side==='L',txt=ta?it.ta:it[d.field];
+    const b=el('button','tile'+(ta?' ta s'+sz(txt):''),txt);b.type='button';
+    const id=side+p;
+    if(M.done.has(p)){b.classList.add('done');b.disabled=true;}
+    if(M.sel&&M.sel.side+M.sel.p===id)b.classList.add('sel');
+    if(M.no&&M.no.indexOf(id)>-1)b.classList.add('no');
+    b.addEventListener('click',()=>tap(side,p));return b;
+  };
+  const g=el('div','mgrid'),cl=el('div','mcol'),cr=el('div','mcol');
+  M.left.forEach(p=>cl.appendChild(tile('L',p)));M.right.forEach(p=>cr.appendChild(tile('R',p)));
+  g.appendChild(cl);g.appendChild(cr);main.appendChild(g);
+  main.appendChild(btn('New round',()=>{S.match=null;render();},'next alt'));
+}
+
+/* ---------- Write (draw the letter) ---------- */
+function renderWrite(){
+  const d=DECKS[S.deck],n=S.order.length,item=d.items[S.order[S.i]];
+  topBar((S.i+1)/n,'Card '+(S.i+1)+' of '+n,'Draw with finger or mouse');
+  main.appendChild(el('div','qsub','Write this in Tamil'));
+  main.appendChild(el('div','q lat',d.field==='en'?item.en:item.rom));
+  if(d.field==='en')main.appendChild(el('div','qsub','Sounds like: '+item.rom));
+  const pad=el('div','pad'),sc='s'+sz(item.ta);
+  pad.appendChild(el('div','padtxt guide '+sc,item.ta));
+  const cv=el('canvas');cv.setAttribute('aria-label','Drawing area');pad.appendChild(cv);
+  pad.appendChild(el('div','padtxt rev '+sc,item.ta));
+  main.appendChild(pad);
+  const w=pad.clientWidth,h=pad.clientHeight,dpr=window.devicePixelRatio||1;
+  cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);
+  const g=cv.getContext('2d');g.scale(dpr,dpr);g.lineWidth=9;g.lineCap=g.lineJoin='round';
+  const ink=(getComputedStyle(document.body).getPropertyValue('--ink')||'#12312f').trim();
+  g.strokeStyle=ink;g.fillStyle=ink;
+  let down=false,lx=0,ly=0,inked=false;
+  const pos=e=>{const r=cv.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top];};
+  cv.addEventListener('pointerdown',e=>{down=true;inked=true;try{cv.setPointerCapture(e.pointerId);}catch(x){}[lx,ly]=pos(e);g.beginPath();g.arc(lx,ly,g.lineWidth/2,0,7);g.fill();e.preventDefault();});
+  cv.addEventListener('pointermove',e=>{if(!down)return;const[x,y]=pos(e);g.beginPath();g.moveTo(lx,ly);g.lineTo(x,y);g.stroke();lx=x;ly=y;});
+  ['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,()=>{down=false;}));
+  const go=k=>{S.i=(S.i+k+n)%n;render();};
+  const guide=btn('Guide',()=>{const off=pad.classList.toggle('nog');guide.setAttribute('aria-pressed',String(!off));});
+  guide.setAttribute('aria-pressed','true');
+  const check=btn('Check',()=>{
+    if(!inked&&!pad.classList.contains('rv')){toast('Try writing it first');return;}
+    const on=pad.classList.toggle('rv');check.setAttribute('aria-pressed',String(on));
+    if(on&&!check.dataset.paid){check.dataset.paid='1';addXP(3);sfx.ok();toast('Compare your strokes with the pink letter · +3 XP');}
+  });
+  check.setAttribute('aria-pressed','false');
+  const clear=btn('Clear',()=>{g.clearRect(0,0,w,h);inked=false;pad.classList.remove('rv');check.setAttribute('aria-pressed','false');});
+  const r1=el('div','ctl');[clear,guide,check].forEach(b=>r1.appendChild(b));main.appendChild(r1);
+  const r2=el('div','ctl');[btn('Back',()=>go(-1)),btn('Listen',()=>speak(item.ta)),btn('Next',()=>go(1))].forEach(b=>r2.appendChild(b));main.appendChild(r2);
+  S.keys={ArrowRight:()=>go(1),ArrowLeft:()=>go(-1),l:()=>speak(item.ta)};
+}
+
+/* ---------- Chart (how combined letters are built) ---------- */
+function renderChart(){
+  const cons=DECKS.consonants.items,C=S.chart,c=cons[C.c];
+  main.appendChild(el('p','qsub','Every consonant joins with the 12 vowels. Pick a consonant, then tap a form to hear it.'));
+  const chips=el('div','chips');
+  cons.forEach((x,i)=>{const b=btn(x.ta,()=>{C.c=i;C.v=null;render();},'cb');b.setAttribute('aria-pressed',String(i===C.c));b.setAttribute('aria-label',x.rom);chips.appendChild(b);});
+  main.appendChild(chips);
+  const fm=el('div','formula');main.appendChild(fm);
+  const vowels=DECKS.vowels.items,stem=c.rom.slice(0,-1);
+  if(C.v===null)fm.textContent='Tap a form below';
+  else{
+    const form=c.ta+VS[C.v];
+    fm.innerHTML='';
+    [c.ta,' + ',vowels[C.v].ta,' → '].forEach((t,k)=>fm.appendChild(document.createTextNode(t)));
+    fm.appendChild(el('b','',form));fm.appendChild(document.createTextNode('  ('+stem+VR[C.v]+')'));
+  }
+  const g=el('div','vgrid');
+  VS.forEach((s,k)=>{
+    const b=el('button','vc');b.type='button';b.setAttribute('aria-pressed',String(C.v===k));
+    b.appendChild(el('span','t',c.ta+s));b.appendChild(el('span','r',stem+VR[k]));
+    b.addEventListener('click',()=>{C.v=k;speak(c.ta+s);render();});g.appendChild(b);
+  });
+  main.appendChild(g);
+  main.appendChild(el('p','note','12 vowels + 18 consonants + 216 combined letters + 1 special letter (ஃ) = 247 letters. Practise them all in the Combined topic.'));
+}
+
+/* ---------- Progress ---------- */
+function renderProgress(){
+  const cards=el('div','cards');
+  [[Math.floor(store.xp/100)+1,'Level'],[store.xp,'Total XP'],[streakNow(),'Day streak']].forEach(x=>{
+    const c=el('div','sc');c.appendChild(el('b','',String(x[0])));c.appendChild(document.createTextNode(x[1]));cards.appendChild(c);
+  });
+  main.appendChild(cards);
+  main.appendChild(el('h2','','Progress by topic'));
+  let tot=0,mas=0;
+  Object.keys(DECKS).forEach(k=>{
+    const d=DECKS[k];let m=0,s=0;
+    d.items.forEach(it=>{const r=getRec(k,it.ta);if(r&&r.n>0){s++;if(r.b>=3)m++;}});
+    tot+=d.items.length;mas+=m;
+    const row=el('div','dk');row.appendChild(el('span','',d.name));
+    const bar=el('div','sbar'),a=el('i','m'),b=el('i','s');
+    a.style.width=(m/d.items.length*100)+'%';b.style.width=((s-m)/d.items.length*100)+'%';bar.appendChild(a);bar.appendChild(b);
+    row.appendChild(bar);row.appendChild(el('span','hint',m+'/'+d.items.length));main.appendChild(row);
+  });
+  main.appendChild(el('p','legend','Green = learned (box 3 or higher) · Gold = seen but still learning · '+mas+' of '+tot+' cards learned overall'));
+  const bk=Object.keys(store.best),bm=Object.keys(store.bestMatch);
+  if(bk.length||bm.length){
+    main.appendChild(el('h2','','Personal bests'));
+    const qn={see:'Tamil → answer',rev:'Answer → Tamil',listen:'Listen'};
+    bk.forEach(k=>{const p=k.split('|');if(DECKS[p[0]])main.appendChild(el('div','hint','Quiz · '+DECKS[p[0]].name+' · '+qn[p[1]]+': '+store.best[k]+' / 10'));});
+    bm.forEach(k=>{if(DECKS[k])main.appendChild(el('div','hint','Match · '+DECKS[k].name+': '+store.bestMatch[k]+' s'));});
+  }
+  main.appendChild(el('h2','','Settings'));
+  const set=el('div','set');
+  const sel=el('select');sel.setAttribute('aria-label','Daily XP goal');
+  [10,20,30,50,100].forEach(v=>{const o=el('option','',v+' XP per day');o.value=String(v);if(v===store.goal)o.selected=true;sel.appendChild(o);});
+  sel.addEventListener('change',()=>{store.goal=+sel.value;persist();renderStats();});
+  set.appendChild(sel);
+  set.appendChild(btn('Export progress',exportData));
+  const file=el('input');file.type='file';file.accept='application/json,.json';file.hidden=true;
+  file.addEventListener('change',()=>importData(file));
+  set.appendChild(btn('Import progress',()=>file.click()));set.appendChild(file);
+  set.appendChild(btn('Reset everything',()=>{
+    if(!confirm('Reset all progress, XP and streak? This cannot be undone.'))return;
+    store=def();persist();applyTheme();S.deck='vowels';S.mode='progress';S.quiz=S.match=S.review=null;resetOrder();renderStats();render();
+  }));
+  main.appendChild(set);
+  main.appendChild(el('p','note','Progress is saved in this browser. Export it to move to another device.'));
+}
+function exportData(){
+  const b=new Blob([JSON.stringify(store,null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tamil-progress.json';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function importData(input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const o=JSON.parse(r.result);
+      if(!o||typeof o!=='object'||typeof o.prog!=='object'||typeof o.xp!=='number')throw new Error('bad');
+      store=Object.assign(def(),o);
+      if(!DECKS[store.deck])store.deck='vowels';
+      persist();applyTheme();S.deck=store.deck;resetOrder();renderStats();render();toast('Progress imported');
+    }catch(e){toast('That file is not a valid progress export');}
+  };
+  r.readAsText(f);
+}
+
+/* ---------- start ---------- */
+applyTheme();resetOrder();renderStats();render();
+})();
+</script>
+</body>
+</html>
